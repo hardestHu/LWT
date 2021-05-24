@@ -35,17 +35,32 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      background
+      :current-page.sync="currentPage"
+      :page-sizes="pageSizeList"
+      :page-size.sync="offset"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      @size-change="handleListChange"
+      @current-change="handleListChange"
+    >
+    </el-pagination>
   </div>
 </template>
 
 <script>
-import CONST from './data'
+import CONST from "./data";
 export default {
   data() {
     return {
       form: {},
       tableData: [],
-      typeList: CONST.HREF_TYPE_LIST
+      typeList: CONST.HREF_TYPE_LIST,
+      currentPage: 1,
+      offset: 10,
+      total: 0,
+      pageSizeList: CONST.PAGE_SIZE_LIST,
     };
   },
 };

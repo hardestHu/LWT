@@ -115,3 +115,36 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+export function _debounce(fn, wait = 500) {
+  let timer, startTimeStamp = 0;
+  let context, args;
+
+  let run = (timerInterval) => {
+      timer = setTimeout(() => {
+          let now = (new Date()).getTime();
+          let interval = now - startTimeStamp
+          if (interval < timerInterval) { // the timer start time has been reset, so the interval is less than timerInterval
+              startTimeStamp = now;
+              run(wait - interval);  // reset timer for left time 
+          } else {
+              fn.apply(context, args);
+              clearTimeout(timer);
+              timer = null;
+          }
+
+      }, timerInterval);
+  }
+
+  return function () {
+      context = this;
+      args = arguments;
+      let now = (new Date()).getTime();
+      startTimeStamp = now;
+
+      if (!timer) {
+          run(wait);    // last timer alreay executed, set a new timer
+      }
+
+  }
+}

@@ -30,6 +30,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      background
+      :current-page.sync="currentPage"
+      :page-sizes="pageSizeList"
+      :page-size.sync="offset"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      @size-change="handleListChange"
+      @current-change="handleListChange"
+    >
+    </el-pagination>
 
     <el-dialog title="收货地址" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="500px">
       <el-form :model="EditForm" label-width="80px">
@@ -67,7 +78,11 @@ export default {
         role: 1
       },
       dialogFormVisible: false,
-      ROLE_LIST: CONST.ROLE_LIST
+      ROLE_LIST: CONST.ROLE_LIST,
+      currentPage: 1,
+      offset: 10,
+      total: 0,
+      pageSizeList: CONST.PAGE_SIZE_LIST
     };
   },
 };

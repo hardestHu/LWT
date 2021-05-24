@@ -44,16 +44,37 @@ export const constantRoutes = [
         meta: { title: 'banner' }
       },
       {
+        path: 'banner/:id',
+        name: 'bannerAdd',
+        hidden: true,
+        component: () => import(/* webpackChunkName: "content" */ '@/views/content/add'), 
+        meta: { title: '新增banner' }
+      },
+      {
         path: 'notice',
         name: 'notice',
         component: () => import(/* webpackChunkName: "content" */ '@/views/content'), 
         meta: { title: '通知公告' }
       },
       {
+        path: 'notice/:id',
+        name: 'noticeAdd',
+        hidden: true,
+        component: () => import(/* webpackChunkName: "content" */ '@/views/content/add'), 
+        meta: { title: '新增公告' }
+      },
+      {
         path: 'news',
         name: 'news',
         component: () => import(/* webpackChunkName: "content" */ '@/views/content'), 
         meta: { title: '新区资讯' }
+      },
+      {
+        path: 'news/:id',
+        name: 'newsAdd',
+        hidden: true,
+        component: () => import(/* webpackChunkName: "content" */ '@/views/content/add'), 
+        meta: { title: '新增资讯' }
       }
     ]
   },
@@ -66,7 +87,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'news',
-        name: 'news',
+        name: 'News',
         component: () => import(/* webpackChunkName: "menu" */ '@/views/menu'), 
         meta: { title: '政策资讯' }
       },
@@ -99,7 +120,6 @@ export const constantRoutes = [
       },
       {
         path: 'notice',
-        name: 'notice',
         component: () => import(/* webpackChunkName: "authority" */ '@/views/authority/explain'),
         meta: { title: '权限说明' }
       }
