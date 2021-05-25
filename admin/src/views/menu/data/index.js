@@ -4,15 +4,15 @@ const HREF_TYPE_LIST = [
         value: 1
     },
     {
-        name: '资讯列表',
+        name: '公众号类',
         value: 2
     },
     {
-        name: '多栏显示',
+        name: '资讯列表',
         value: 3
     },
     {
-        name: '公众号类',
+        name: '多栏显示',
         value: 4
     }
 ]

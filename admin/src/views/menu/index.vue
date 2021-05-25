@@ -16,7 +16,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary">查询</el-button>
-        <el-button>新增</el-button>
+        <el-button @click="linkToAdd">新增</el-button>
       </el-form-item>
     </el-form>
     <el-table :data="tableData" border style="width: 100%">
@@ -63,6 +63,13 @@ export default {
       pageSizeList: CONST.PAGE_SIZE_LIST,
     };
   },
+  methods: {
+    linkToAdd() {
+      const name = this.$route.name
+      const path = `/menu/${name}/add`
+      this.$router.push({path: path})
+    },
+  }
 };
 </script>
 

@@ -86,10 +86,17 @@ export const constantRoutes = [
     redirect: '/menu/news',
     children: [
       {
-        path: 'news',
-        name: 'News',
+        path: 'policy',
+        name: 'policy',
         component: () => import(/* webpackChunkName: "menu" */ '@/views/menu'), 
         meta: { title: '政策资讯' }
+      },
+      {
+        path: 'policy/:id',
+        name: 'policyAdd',
+        hidden: true,
+        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'), 
+        meta: { title: '新增政策资讯' }
       },
       {
         path: 'credential',
@@ -98,10 +105,24 @@ export const constantRoutes = [
         meta: { title: '证件办理' }
       },
       {
+        path: 'credential/:id',
+        name: 'credentialAdd',
+        hidden: true,
+        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'), 
+        meta: { title: '新增证件办理' }
+      },
+      {
         path: 'life',
         name: 'life',
         component: () => import(/* webpackChunkName: "menu" */ '@/views/menu'), 
         meta: { title: '生活服务' }
+      },
+      {
+        path: 'life/:id',
+        name: 'lifeAdd',
+        hidden: true,
+        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'), 
+        meta: { title: '新增生活服务' }
       }
     ]
   },
