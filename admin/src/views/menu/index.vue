@@ -55,7 +55,7 @@ export default {
   data() {
     return {
       form: {},
-      tableData: [],
+      tableData: [{}],
       typeList: CONST.HREF_TYPE_LIST,
       currentPage: 1,
       offset: 10,

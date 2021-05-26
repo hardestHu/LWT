@@ -4,6 +4,7 @@
       <div class="form-add">
         <el-form-item label="名称">
           <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="form.desc"></el-input>
@@ -73,8 +74,10 @@
             <div v-for="(item, index) in formInline.list" class="org-item" :key="item.id">
               <el-form-item label="机构名称">
                 <el-input v-model="item.name"></el-input>
+                <el-input v-model="item.name"></el-input>
               </el-form-item>
               <el-form-item label="机构地址">
+                <el-input v-model="item.address"></el-input>
                 <el-input v-model="item.address"></el-input>
               </el-form-item>
               <el-form-item>

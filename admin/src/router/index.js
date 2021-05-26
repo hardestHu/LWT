@@ -83,7 +83,7 @@ export const constantRoutes = [
     component: Layout,
     name: 'menu',
     meta: { title: '入口管理', icon: 'el-icon-s-help' },
-    redirect: '/menu/news',
+    redirect: '/menu/policy',
     children: [
       {
         path: 'policy',
