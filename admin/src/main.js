@@ -10,17 +10,15 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
+import api from './api'
 
 import '@/icons' // icon
 
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
-}
 
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+Vue.prototype.$http = api
 
 new Vue({
   el: '#app',

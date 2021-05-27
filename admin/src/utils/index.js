@@ -1,6 +1,4 @@
-/**
- * Created by PanJiaChen on 16/11/18.
- */
+import CryptoJS from 'crypto-js'
 
 /**
  * Parse the time to string
@@ -147,4 +145,12 @@ export function _debounce(fn, wait = 500) {
       }
 
   }
+}
+
+export function encrypt(word) {
+  const keyStr = 'laowaitongaeskey'
+  const key = CryptoJS.enc.Utf8.parse(keyStr)
+  var srcs = CryptoJS.enc.Utf8.parse(word)
+  var encrypted = CryptoJS.AES.encrypt(srcs, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
+  return encrypted.toString();
 }

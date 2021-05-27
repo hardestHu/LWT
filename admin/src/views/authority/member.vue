@@ -5,15 +5,15 @@
         <el-input v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item label="手机号">
-        <el-input v-model="form.name"></el-input>
+        <el-input v-model="form.phone"></el-input>
       </el-form-item>
       <el-form-item label="角色权限">
-        <el-select v-model="form.region" :clearable="true">
+        <el-select v-model="form.power" :clearable="true">
           <el-option v-for="item in ROLE_LIST" :key="item.value" :label="item.name" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="getList">查询</el-button>
         <el-button @click="dialogFormVisible = true">新增</el-button>
       </el-form-item>
     </el-form>
@@ -72,8 +72,12 @@ export default {
   name: "member",
   data() {
     return {
-      form: {},
-      tableData: [{}],
+      form: {
+        name: '',
+        phone: '',
+        power: ''
+      },
+      tableData: [],
       EditForm: {
         role: 1
       },
@@ -85,6 +89,27 @@ export default {
       pageSizeList: CONST.PAGE_SIZE_LIST
     };
   },
+  mounted() {
+    this.getList()
+  },
+  methods: {
+    async getList() {
+      let data = {
+        ...this.form,
+        page: this.currentPage,
+        pageSize: this.offset
+      }
+      let res = await this.$http.powerQuery(data)
+      if(res && res.list) {
+        const {list, total} = res
+        this.tableData = list
+        this.total = total
+      }
+    },
+    handleListChange() {
+      this.getList()
+    }
+  }
 };
 </script>
 

@@ -69,6 +69,9 @@ export default {
       const path = `/menu/${name}/add`
       this.$router.push({path: path})
     },
+    getList() {
+      this.$http
+    }
   }
 };
 </script>

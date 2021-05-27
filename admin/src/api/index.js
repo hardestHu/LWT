@@ -180,6 +180,14 @@ export default {
             method: 'post',
             data
         })
-    }
+    },
+    // 改密
+    upadtePassWord(data) {
+        return request({
+            url: '/backstage/power/updatePassword',
+            method: 'post',
+            data
+        })
+    },
 }
 

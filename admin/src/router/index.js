@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { getToken } from '@/utils/auth'
 
 Vue.use(Router)
 
@@ -10,7 +11,10 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
+    hidden: true,
+    meta: {
+      isLogin: true
+    }
   },
 
   {
@@ -40,40 +44,40 @@ export const constantRoutes = [
       {
         path: 'banner',
         name: 'banner',
-        component: () => import(/* webpackChunkName: "content" */ '@/views/content'), 
+        component: () => import(/* webpackChunkName: "content" */ '@/views/content'),
         meta: { title: 'banner' }
       },
       {
         path: 'banner/:id',
         name: 'bannerAdd',
         hidden: true,
-        component: () => import(/* webpackChunkName: "content" */ '@/views/content/add'), 
+        component: () => import(/* webpackChunkName: "content" */ '@/views/content/add'),
         meta: { title: '新增banner' }
       },
       {
         path: 'notice',
         name: 'notice',
-        component: () => import(/* webpackChunkName: "content" */ '@/views/content'), 
+        component: () => import(/* webpackChunkName: "content" */ '@/views/content'),
         meta: { title: '通知公告' }
       },
       {
         path: 'notice/:id',
         name: 'noticeAdd',
         hidden: true,
-        component: () => import(/* webpackChunkName: "content" */ '@/views/content/add'), 
+        component: () => import(/* webpackChunkName: "content" */ '@/views/content/add'),
         meta: { title: '新增公告' }
       },
       {
         path: 'news',
         name: 'news',
-        component: () => import(/* webpackChunkName: "content" */ '@/views/content'), 
+        component: () => import(/* webpackChunkName: "content" */ '@/views/content'),
         meta: { title: '新区资讯' }
       },
       {
         path: 'news/:id',
         name: 'newsAdd',
         hidden: true,
-        component: () => import(/* webpackChunkName: "content" */ '@/views/content/add'), 
+        component: () => import(/* webpackChunkName: "content" */ '@/views/content/add'),
         meta: { title: '新增资讯' }
       }
     ]
@@ -88,40 +92,40 @@ export const constantRoutes = [
       {
         path: 'policy',
         name: 'policy',
-        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu'), 
+        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu'),
         meta: { title: '政策资讯' }
       },
       {
         path: 'policy/:id',
         name: 'policyAdd',
         hidden: true,
-        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'), 
+        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'),
         meta: { title: '新增政策资讯' }
       },
       {
         path: 'credential',
         name: 'credential',
-        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu'), 
+        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu'),
         meta: { title: '证件办理' }
       },
       {
         path: 'credential/:id',
         name: 'credentialAdd',
         hidden: true,
-        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'), 
+        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'),
         meta: { title: '新增证件办理' }
       },
       {
         path: 'life',
         name: 'life',
-        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu'), 
+        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu'),
         meta: { title: '生活服务' }
       },
       {
         path: 'life/:id',
         name: 'lifeAdd',
         hidden: true,
-        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'), 
+        component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'),
         meta: { title: '新增生活服务' }
       }
     ]
@@ -158,6 +162,20 @@ const createRouter = () => new Router({
 })
 
 const router = createRouter()
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => !record.meta.isLogin)) {   //遍历 $route.matched 来检查路由记录中的 meta 字段
+    if (getToken()) {
+      next()          //进行路由管道中的下一个钩子
+    } else {
+      next({
+        path: '/login',
+      })
+    }
+  } else {
+    next()
+  }
+})
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
