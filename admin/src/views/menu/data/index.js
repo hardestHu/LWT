@@ -4,16 +4,20 @@ const HREF_TYPE_LIST = [
         value: 1
     },
     {
-        name: '公众号类',
+        name: '小程序',
         value: 2
     },
     {
-        name: '资讯列表',
+        name: '公众号类',
         value: 3
     },
     {
-        name: '多栏显示',
+        name: '资讯列表',
         value: 4
+    },
+    {
+        name: '多栏显示',
+        value: 5
     }
 ]
 const PAGE_SIZE_LIST = [10, 20, 50]

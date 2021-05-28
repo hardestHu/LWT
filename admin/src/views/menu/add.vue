@@ -3,16 +3,17 @@
     <el-form ref="form" :model="form" label-width="80px">
       <div class="form-add">
         <el-form-item label="名称">
-          <el-input v-model="form.name"></el-input>
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.levelTwoModuleChinese"></el-input>
+          <el-input v-model="form.levelTwoModuleEnglish" placeholder="English"></el-input>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input v-model="form.desc"></el-input>
+          <el-input v-model="form.msgChinese"></el-input>
+          <el-input v-model="form.msgEnglish" placeholder="English"></el-input>
         </el-form-item>
         <el-form-item label="图标" prop="image">
           <el-upload
             class="upload-demo"
-            action="/hy/medical/help/uploadPictures"
+            action="/laowaitong/help/uploadPictures"
             :file-list="fileList"
             list-type="picture-card"
             :limit="1"
@@ -25,23 +26,26 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="跳转方式">
-          <el-select v-model="form.linkType" placeholder="请选择活动区域">
+          <el-select v-model="form.skipType" placeholder="请选择活动区域">
             <el-option
-              v-for="item in linkType"
+              v-for="item in skipType"
               :key="item.value"
               :label="item.name"
               :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="链接" v-if="form.linkType == 1">
+        <el-form-item label="链接" v-if="form.skipType == 1">
           <el-input v-model="form.desc"></el-input>
         </el-form-item>
-        <el-form-item label="App" v-if="form.linkType == 2">
+        <el-form-item label="小程序" v-if="form.skipType == 2">
+          <el-input v-model="form.desc"></el-input>
+        </el-form-item>
+        <el-form-item label="公众号" v-if="form.skipType == 3">
           <el-input v-model="form.desc"></el-input>
         </el-form-item>
       </div>
-      <el-form-item label="资讯列表" v-if="form.linkType == 3">
+      <el-form-item label="资讯列表" v-if="form.skipType == 4">
         <el-table :data="tableData" border style="width: 100%">
           <el-table-column type="selection" width="55"> </el-table-column>
           <el-table-column prop="date" label="日期" width="180">
@@ -62,7 +66,7 @@
         >
         </el-pagination>
       </el-form-item>
-      <template v-if="form.linkType == 4">
+      <template v-if="form.skipType == 5">
         <el-form-item label="须知">
           <TinymceEditor
             @input="debounce"
@@ -114,8 +118,14 @@ export default {
   },
   data() {
     return {
+      levelOneModuleChinese: this.$route.name == 'policyAdd' ? 1 : this.$route.name == 'credential' ? 2 : 3,
       form: {
-        linkType: 1,
+        levelTwoModuleChinese: '',
+        levelTwoModuleEnglish: '',
+        msgChinese: '',
+        msgEnglish: '',
+        icon: '',
+        skipType: 1,
       },
       formInline: {
           list: [{
@@ -124,7 +134,7 @@ export default {
           }]
       },
 
-      linkType: CONST.HREF_TYPE_LIST,
+      skipType: CONST.HREF_TYPE_LIST,
       tableData: [],
       currentPage: 1,
       offset: 10,
