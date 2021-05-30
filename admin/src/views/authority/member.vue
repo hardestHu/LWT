@@ -24,10 +24,15 @@
     </el-form>
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column type="index" label="序号" width="80"></el-table-column>
-      <el-table-column prop="date" label="名称"></el-table-column>
-      <el-table-column prop="name" label="手机号"> </el-table-column>
-      <el-table-column prop="address" label="角色权限"> </el-table-column>
-      <el-table-column prop="address" label="创建时间吗"> </el-table-column>
+      <el-table-column prop="name" label="名称"></el-table-column>
+      <el-table-column prop="phone" label="手机号"> </el-table-column>
+      <el-table-column prop="power" label="角色权限" :formatter="formatter"> </el-table-column>
+      <el-table-column
+        prop="creditTime"
+        :formatter="formatter"
+        label="创建时间"
+      >
+      </el-table-column>
       <el-table-column prop="address" label="操作">
         <template v-if="scope.row.power != 0" slot-scope="scope">
           <el-button type="text" size="small" @click="editUser(scope.row)"
@@ -89,6 +94,8 @@
 <script>
 import { mapState } from "vuex";
 import CONST from "./data";
+import { dateFormat } from "@/utils";
+import { findIndex } from "loadsh";
 export default {
   name: "member",
   data() {
@@ -148,7 +155,9 @@ export default {
         ...this.EditForm,
         founder: name,
       };
-      let res = this.isEdit ? this.$http.powerUpdate(data) : this.$http.powerAdd(data)
+      let res = this.isEdit
+        ? this.$http.powerUpdate(data)
+        : this.$http.powerAdd(data);
       res.then(() => {
         this.dialogFormVisible = false;
         this.getList();
@@ -178,6 +187,14 @@ export default {
       };
       this.currentPage = 1;
       this.offset = 10;
+    },
+    formatter(row, col) {
+      if (col.property == "creditTime") {
+        return dateFormat("YYYY-mm-dd HH:MM", row.creditTime);
+      } else {
+        let index = findIndex(CONST.ROLE_LIST, ["value", row.power]);
+        return row.power == 0 ? '超级管理员' : CONST.ROLE_LIST[index] && CONST.ROLE_LIST[index].name;
+      }
     },
   },
 };

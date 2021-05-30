@@ -38,7 +38,7 @@ export const constantRoutes = [
     path: '/content',
     component: Layout,
     name: 'content',
-    meta: { title: '内容发布', icon: 'el-icon-s-help' },
+    meta: { title: '内容发布', icon: 'el-icon-s-claim' },
     redirect: '/content/banner',
     children: [
       {
@@ -86,7 +86,7 @@ export const constantRoutes = [
     path: '/menu',
     component: Layout,
     name: 'menu',
-    meta: { title: '入口管理', icon: 'el-icon-s-help' },
+    meta: { title: '入口管理', icon: 'el-icon-menu' },
     redirect: '/menu/policy',
     children: [
       {
@@ -134,7 +134,7 @@ export const constantRoutes = [
     path: '/authority',
     component: Layout,
     name: 'authority',
-    meta: { title: '权限管理', icon: 'el-icon-s-help' },
+    meta: { title: '权限管理', icon: 'el-icon-user' },
     redirect: '/authority/member',
     children: [
       {

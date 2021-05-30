@@ -3,7 +3,7 @@
     <el-form :inline="true" size="small" :model="form">
       <el-form-item label="状态">
         <el-select
-          v-model="form.publishStatus"
+          v-model="form.status"
           :clearable="true"
           placeholder="请选择发布状态"
         >
@@ -17,47 +17,59 @@
       </el-form-item>
       <el-form-item label="关键词">
         <el-input
-          v-model="form.param"
+          v-model="form.keyword"
           placeholder="查询标题名称等关键词"
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="getList">查询</el-button>
         <el-button @click="linkToAdd">添加</el-button>
       </el-form-item>
     </el-form>
     <el-table :data="info" stripe border style="width: 100%">
       <el-table-column type="index" label="序号" width="70"> </el-table-column>
-      <el-table-column prop="newsTitle" label="标题名称"> </el-table-column>
-      <el-table-column prop="newsLink" label="链接地址" width="180">
+      <el-table-column prop="titleChinese" label="标题名称"> </el-table-column>
+      <el-table-column prop="urlAddress" label="链接地址" width="180">
       </el-table-column>
-      <el-table-column prop="image" label="缩略图">
+      <el-table-column prop="thumbnail" label="缩略图">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="previewImage(scope.row)"
-            >查看</el-button
-          >
+         <img :src="scope.row.thumbnail" alt="">
         </template>
       </el-table-column>
-      <el-table-column
-        prop="newsStatus"
-        :formatter="formatter"
-        label="发布状态"
-      >
+      <el-table-column prop="status" :formatter="formatter" label="发布状态">
       </el-table-column>
       <el-table-column
-        prop="publishTime"
+        prop="creditTime"
         :formatter="formatter"
-        label="发布时间"
+        label="创建时间"
       >
       </el-table-column>
       <el-table-column label="操作" width="180">
         <template slot-scope="scope">
-          <el-button type="text" size="small">{{
-            scope.row.newsStatus == 0 ? "显示" : "隐藏"
-          }}</el-button>
-          <el-button type="text" size="small">置顶</el-button>
-          <el-button type="text" size="small">修改</el-button>
-          <el-button type="text" size="small">删除</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleTable(scope.row, 'other')"
+            >{{ scope.row.status == 0 ? "显示" : "隐藏" }}</el-button
+          >
+          <el-button
+            type="text"
+            size="small"
+            @click="handleTable(scope.row, 'top')"
+            >置顶</el-button
+          >
+          <el-button
+            type="text"
+            size="small"
+            @click="handleTable(scope.row, 'edit')"
+            >修改</el-button
+          >
+          <el-button
+            type="text"
+            size="small"
+            @click="handleTable(scope.row, 'del')"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -68,8 +80,8 @@
       :page-size.sync="offset"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
-      @size-change="handleListChange"
-      @current-change="handleListChange"
+      @size-change="getList"
+      @current-change="getList"
     >
     </el-pagination>
   </div>
@@ -77,11 +89,15 @@
 
 <script>
 import CONST from "./data";
+import { dateFormat } from "@/utils";
 export default {
   data() {
     return {
-      form: {},
-      info: [{}],
+      form: {
+        status: "",
+        keyword: "",
+      },
+      info: [],
       currentPage: 1,
       offset: 10,
       total: 0,
@@ -89,18 +105,80 @@ export default {
       stateList: CONST.PUBLISH_STATE,
     };
   },
+  mounted() {
+    this.getList();
+  },
   methods: {
     linkToAdd() {
-      const name = this.$route.name
-      const path = `/content/${name}/add`
-      this.$router.push({path: path})
+      const name = this.$route.name;
+      const path = `/content/${name}/add`;
+      this.$router.push({ path: path });
     },
-    formatter() {
-      
-    }
-  }
+    getList() {
+      let data = {
+        levelOneModuleChinese: this.$route.meta.title,
+        ...this.form,
+        page: this.currentPage,
+        pageSize: this.offset,
+      };
+      this.$http.contentQuery(data).then((res) => {
+        this.info = res.data.list;
+      });
+    },
+    async handleTable(row, type) {
+      const _this = this;
+      const data = { id: row.id };
+      switch (type) {
+        case "del":
+          {
+            _this.$http.contentDel(data).then(() => {
+              this.$message.success("删除成功");
+              this.getList();
+            });
+          }
+          break;
+        case "top":
+          {
+            this.$http.contentTop(data).then(() => {
+              this.$message.success("置顶成功");
+              this.getList();
+            });
+          }
+          break;
+        case "edit":
+          {
+            const name = this.$route.name;
+            const path = `/content/${name}/${row.id}`;
+            _this.$router.push({ path: path });
+          }
+          break;
+        default:
+          {
+            const status = row.status;
+            status == 1
+              ? await this.$http.contentHidden(data)
+              : await this.$http.contentShow(data);
+            this.getList();
+          }
+
+          break;
+      }
+    },
+    formatter(row, col) {
+      if (col.property == "status") {
+        return row.status == 1 ? "显示" : "隐藏";
+      } else {
+        return dateFormat("YYYY-mm-dd HH:MM", row.creditTime);
+      }
+    },
+  },
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.el-table {
+  td img{
+    width: 100%;
+  }
+}
 </style>

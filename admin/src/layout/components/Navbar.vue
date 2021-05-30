@@ -127,18 +127,16 @@ export default {
         }
       });
     },
-    async upadtePassWord() {
+    upadtePassWord() {
       let param = {
         phone: this.token,
         passWord: encrypt(this.form.passWord),
         newPassword: encrypt(this.form.newPasswordC),
       };
-      let res = await this.$http.upadtePassWord(param);
-      if (res && res.result && res.result.success) {
+      this.$http.upadtePassWord(param).then(() => {
         this.$message.success("修改成功");
-      }else {
-        this.$message.error(res.result && res.result.message || '修改失败')
-      }
+        this.dialogFormVisible = false;
+      })
     },
   },
 };

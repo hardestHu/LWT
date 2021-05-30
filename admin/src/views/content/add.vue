@@ -1,20 +1,35 @@
 <template>
   <div>
     <el-form label-width="80px" :model="form">
-      <el-form-item label="链接地址" prop="newsLink">
-        <el-input v-model="form.newsLink" placeholder="当输入链接时，优先展示链接内容"></el-input>
+      <el-form-item label="链接地址" prop="urlAddress">
+        <el-input
+          v-model="form.urlAddress"
+          placeholder="当输入链接时，优先展示链接内容"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="标题名称" prop="newsTitle">
-        <el-input v-model="form.newsTitle"></el-input>
+      <el-form-item label="标题名称" prop="titleChinese">
+        <el-input v-model="form.titleChinese" placeholder="中文"></el-input>
+        <el-input v-model="form.titleEnglish" placeholder="English"></el-input>
       </el-form-item>
       <el-form-item>
-        <TinymceEditor @input="debounce" :value="form.newsText"></TinymceEditor>
+        <TinymceEditor
+          @input="debounce"
+          :value="form.contentChinese"
+        ></TinymceEditor>
+      </el-form-item>
+      <el-form-item>
+        <TinymceEditor
+          @input="debounceEN"
+          id="TinymceEditor-EN"
+          :value="form.contentEnglish"
+        ></TinymceEditor>
       </el-form-item>
       <el-form-item label="缩略图" prop="image">
         <el-upload
           class="upload-demo"
-          action="/hy/medical/help/uploadPictures"
+          action="/laowaitong/help/uploadPictures"
           :file-list="fileList"
+          :on-remove="onRemove"
           list-type="picture-card"
           :limit="1"
           name="files"
@@ -34,64 +49,105 @@
 <script>
 import { _debounce } from "@/utils";
 import TinymceEditor from "@/components/tEditor";
+import CONST from "./data";
+import { mapState } from "vuex";
 export default {
   components: {
     TinymceEditor,
   },
   data() {
     return {
+      id: this.$route.params.id == "add" ? "" : this.$route.params.id,
+      levelOneModuleChinese:
+        this.$route.name == "bannerAdd"
+          ? "banner"
+          : this.$route.name == "noticeAdd"
+          ? "通知公告"
+          : "新区资讯",
       form: {
-        medicalNewsId: "",
-        newsType: this.$route.name == "newsAdd" ? "0" : "1",
-        newsTitle: "",
-        newsLink: "",
-        newsText: "",
-        newsPic: "",
+        urlAddress: "",
+        titleChinese: "",
+        titleEnglish: "",
+        thumbnail: "",
+        contentChinese: "",
+        contentEnglish: "",
       },
       fileList: [],
       debounce: _debounce(this.editorInput, 300),
+      debounceEN: _debounce(this.editorInputEN, 300),
     };
   },
+  computed: {
+    ...mapState(["user"]),
+  },
   created() {
-    this.form.medicalNewsId = this.$route.params.id || ''
-    this.queryNewsData()
+    this.queryNewsData();
   },
   methods: {
     async updateOrInsertNews() {
-      let res = await this.$http.updateOrInsertNews({
-        ...this.form
-      });
-      if (res && res.result && res.result.success) {
-        let path =
-          this.$route.name == "newsAdd" ? "/content/news" : "/content/banner";
-        this.$router.push({ path: path });
-      }
+      let data = {
+        id: this.id || '',
+        levelOneModuleChinese: this.levelOneModuleChinese,
+        founder: this.user.token,
+        ...this.form,
+      };
+      let res = this.id ? this.$http.contentUpdate(data) : this.$http.contentAdd(data);
+      res.then(() => {
+        this.$message.success('操作成功')
+        this.$route.path.replace(/\/([^/]*)$/g, (...args) => {
+          const path = args && args[2] && this.$route.path.slice(0, args[2])
+          this.$router.push({path: path})
+        })
+      })
     },
-    async queryNewsData() {
-      if(!this.form.medicalNewsId) return
-      let res = await this.$http.queryNewsData({medicalNewsId: this.form.medicalNewsId})
-      if(res && res.medicalNew) {
-        res = res.medicalNew
-        this.form.newsTitle = res.newsTitle
-        this.form.newsLink = res.newsLink
-        this.form.newsText = res.newsText
-        this.form.newsPic = res.newsPic
-        res.newsPic ? this.fileList.push({name:'', url:res.newsPic}) : ''
-      }
+    queryNewsData() {
+      if (!this.id) return;
+      this.$http.contentDetail({ id: this.id }).then((res) => {
+        const {
+          titleChinese,
+          titleEnglish,
+          urlAddress,
+          contentChinese,
+          contentEnglish,
+          thumbnail,
+        } = res.data;
+        this.form = {
+          urlAddress: urlAddress,
+          titleChinese: titleChinese,
+          titleEnglish: titleEnglish,
+          thumbnail: thumbnail,
+          contentChinese: contentChinese,
+          contentEnglish: contentEnglish,
+        };
+        thumbnail ? this.fileList.push({name:'', url:thumbnail}) : ''
+      });
     },
     editorInput(v) {
-      this.form.newsText = v;
+      this.form.contentChinese = v;
+    },
+    editorInputEN(v) {
+      this.form.contentEnglish = v;
     },
     handleImageSuccess(response) {
-      if(response?.picIds) {
-        this.form.newsPic = response.picIds[0]
+      if (response?.picIds) {
+        this.form.thumbnail = CONST.HOST + response.picIds[0];
       }
     },
     onSubmit() {
       this.updateOrInsertNews();
     },
+    onRemove() {
+      this.fileList = []
+      this.form.thumbnail = ''
+    }
   },
 };
 </script>
 <style lang='scss' scoped>
+.el-input {
+  width: 400px;
+  & + .el-input {
+    margin-left: 10px;
+  }
+}
 </style>

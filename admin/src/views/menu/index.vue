@@ -2,10 +2,10 @@
   <div>
     <el-form ref="form" :model="form" :inline="true">
       <el-form-item label="名称">
-        <el-input v-model="form.name"></el-input>
+        <el-input v-model="form.levelTwoModuleChinese"></el-input>
       </el-form-item>
       <el-form-item label="描述">
-        <el-input v-model="form.msg"></el-input>
+        <el-input v-model="form.msgChinese"></el-input>
       </el-form-item>
       <el-form-item label="跳转方式">
         <el-select v-model="form.skipType" :clearable="true">
@@ -91,8 +91,8 @@ export default {
   data() {
     return {
       form: {
-        name: "",
-        msg: "",
+        levelTwoModuleChinese: "",
+        msgChinese: "",
         skipType: "",
       },
       tableData: [{}],
@@ -115,6 +115,7 @@ export default {
     async getList() {
       let data = {
         ...this.form,
+        levelOneModuleChinese: this.$route.meta.title,
         page: this.currentPage,
         pageSize: this.offset,
       };
@@ -125,10 +126,11 @@ export default {
     },
     async handleTable(type, row) {
       const _this = this;
+      const data = {id: row.id}
       switch (type) {
         case "del":
           {
-            _this.$http.entryDel({ id: row.id }).then(() => {
+            _this.$http.entryDel(data).then(() => {
               this.$message.success("删除成功");
               this.getList();
             });
@@ -136,17 +138,23 @@ export default {
           break;
         case "top":
           {
-            this.$http.entryTop({id: row.id}).then(() => {
-              this.$message.success("置顶成功")
-              this.getList()
-            })
+            this.$http.entryTop(data).then(() => {
+              this.$message.success("置顶成功");
+              this.getList();
+            });
+          }
+          break;
+        case "edit":
+          {
+            const name = this.$route.name;
+            const path = `/menu/${name}/${row.id}`;
+            _this.$router.push({ path: path });
           }
           break;
 
         default:
           {
             const status = row.status;
-            const data = { id: row.id };
             status == 1
               ? await this.$http.entryHidden(data)
               : await this.$http.entryShow(data);

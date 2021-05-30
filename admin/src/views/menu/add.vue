@@ -3,11 +3,11 @@
     <el-form ref="form" :model="form" label-width="80px">
       <div class="form-add">
         <el-form-item label="名称">
-          <el-input v-model="form.levelTwoModuleChinese"></el-input>
+          <el-input v-model="form.levelTwoModuleChinese" placeholder="中文"></el-input>
           <el-input v-model="form.levelTwoModuleEnglish" placeholder="English"></el-input>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input v-model="form.msgChinese"></el-input>
+          <el-input v-model="form.msgChinese" placeholder="中文"></el-input>
           <el-input v-model="form.msgEnglish" placeholder="English"></el-input>
         </el-form-item>
         <el-form-item label="图标" prop="image">
@@ -80,10 +80,6 @@
                 <el-input v-model="item.name"></el-input>
                 <el-input v-model="item.name"></el-input>
               </el-form-item>
-              <el-form-item label="机构地址">
-                <el-input v-model="item.address"></el-input>
-                <el-input v-model="item.address"></el-input>
-              </el-form-item>
               <el-form-item>
                 <el-button
                 v-if="index == formInline.list.length - 1"
@@ -133,7 +129,7 @@ export default {
               addres: ''
           }]
       },
-
+      fileList: [],
       skipType: CONST.HREF_TYPE_LIST,
       tableData: [],
       currentPage: 1,
@@ -162,6 +158,13 @@ export default {
   width: 600px;
 }
 .org-item {
-    margin-bottom: 10px;
+    .el-form-item{
+      margin-bottom: 10px;
+    }
+}
+.el-input {
+  & + .el-input {
+    margin-top: 10px;
+  }
 }
 </style>
