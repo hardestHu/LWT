@@ -29,7 +29,11 @@
         label="名称"
       ></el-table-column>
       <el-table-column prop="msgChinese" label="描述"> </el-table-column>
-      <el-table-column prop="icon" label="图标"> </el-table-column>
+      <el-table-column prop="icon" label="图标">
+        <template slot-scope="scope">
+          <img :src="scope.row.icon" alt="" />
+        </template>
+      </el-table-column>
       <el-table-column
         prop="skipType"
         :formatter="formatter"
@@ -126,7 +130,7 @@ export default {
     },
     async handleTable(type, row) {
       const _this = this;
-      const data = {id: row.id}
+      const data = { id: row.id };
       switch (type) {
         case "del":
           {
@@ -176,5 +180,10 @@ export default {
 };
 </script>
 
-<style>
+<style lang='scss' scoped>
+.el-table {
+  img {
+    width: 100%;
+  }
+}
 </style>

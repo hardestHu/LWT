@@ -20,9 +20,11 @@ const HREF_TYPE_LIST = [
         value: 5
     }
 ]
+const HOST =  '//laowaitong.gzspiral.com/laowaitong/help/downloadFile?medicalPicId='
 const PAGE_SIZE_LIST = [10, 20, 50]
 
 export default {
     HREF_TYPE_LIST,
-    PAGE_SIZE_LIST
+    PAGE_SIZE_LIST,
+    HOST
 }

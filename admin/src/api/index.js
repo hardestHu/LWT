@@ -50,6 +50,14 @@ export default {
             data
         })
     },
+    // 根据ID批量查询
+    contentQueryBatch(data) {
+        return request({
+            url: '/backstage/distribution/queryBatch',
+            method: 'post',
+            data
+        })
+    },
     // 隐藏
     contentHidden(data) {
         return request({

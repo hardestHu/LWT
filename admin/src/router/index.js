@@ -100,7 +100,7 @@ export const constantRoutes = [
         name: 'policyAdd',
         hidden: true,
         component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'),
-        meta: { title: '新增政策资讯' }
+        meta: { title: '政策资讯' }
       },
       {
         path: 'credential',
@@ -113,7 +113,7 @@ export const constantRoutes = [
         name: 'credentialAdd',
         hidden: true,
         component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'),
-        meta: { title: '新增证件办理' }
+        meta: { title: '证件办理' }
       },
       {
         path: 'life',
@@ -126,7 +126,7 @@ export const constantRoutes = [
         name: 'lifeAdd',
         hidden: true,
         component: () => import(/* webpackChunkName: "menu" */ '@/views/menu/add'),
-        meta: { title: '新增生活服务' }
+        meta: { title: '生活服务' }
       }
     ]
   },
