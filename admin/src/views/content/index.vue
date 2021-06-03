@@ -31,7 +31,7 @@
       <el-table-column prop="titleChinese" label="标题名称"> </el-table-column>
       <el-table-column prop="urlAddress" label="链接地址" width="180">
       </el-table-column>
-      <el-table-column prop="thumbnail" label="缩略图">
+      <el-table-column prop="thumbnail" label="缩略图" align="center">
         <template slot-scope="scope">
          <img :src="scope.row.thumbnail" alt="">
         </template>
@@ -178,7 +178,7 @@ export default {
 <style lang="scss" scoped>
 .el-table {
   td img{
-    width: 100%;
+    max-width: 100px;
   }
 }
 </style>

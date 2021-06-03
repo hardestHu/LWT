@@ -29,7 +29,7 @@
         label="名称"
       ></el-table-column>
       <el-table-column prop="msgChinese" label="描述"> </el-table-column>
-      <el-table-column prop="icon" label="图标">
+      <el-table-column prop="icon" label="图标" align="center">
         <template slot-scope="scope">
           <img :src="scope.row.icon" alt="" />
         </template>
@@ -183,7 +183,7 @@ export default {
 <style lang='scss' scoped>
 .el-table {
   img {
-    width: 100%;
+    max-width: 100px;
   }
 }
 </style>
