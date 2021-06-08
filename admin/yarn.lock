@@ -10578,6 +10578,11 @@ vue-jest@^3.0.5:
     tsconfig "^7.0.0"
     vue-template-es2015-compiler "^1.6.0"
 
+vue-jsonp@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/vue-jsonp/-/vue-jsonp-2.0.0.tgz#3bfac56bb72941a2511c11e1a123b876f03427f7"
+  integrity sha512-Mzd9GNeuKP5hHFDWZNMWOsCuMILSkA6jo2l4A02wheFz3qqBzH7aSEFTey1BRCZCLizlaf1EqJ5YUtF392KspA==
+
 vue-loader@^15.9.2:
   version "15.9.7"
   resolved "https://registry.yarnpkg.com/vue-loader/-/vue-loader-15.9.7.tgz#15b05775c3e0c38407679393c2ce6df673b01044"

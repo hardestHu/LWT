@@ -115,12 +115,20 @@
               :key="item.id"
             >
               <el-form-item label="机构名称">
-                <el-input v-model="item.name" placeholder="中文"></el-input>
+                <el-input
+                  v-model="item.name"
+                  placeholder="中文"
+                ></el-input>
                 <el-input v-model="item.nameEN" placeholder="EN"></el-input>
               </el-form-item>
               <el-form-item label="机构地址">
-                <el-input v-model="item.address" placeholder="中文"></el-input>
+                <el-input v-model="item.address" placeholder="中文" @blur="getLocation(item.address, index)"></el-input>
                 <el-input v-model="item.addressEN" placeholder="EN"></el-input>
+                <el-input
+                  v-model="item.mapImage"
+                  placeholder="坐标"
+                  disabled
+                ></el-input>
               </el-form-item>
               <el-form-item class="add-btn">
                 <el-button
@@ -200,6 +208,7 @@ export default {
             nameEN: "",
             address: "",
             addressEN: "",
+            mapImage: ""
           },
         ],
       },
@@ -287,6 +296,7 @@ export default {
         nameEN: "",
         adress: "",
         adressEN: "",
+        mapImage: "",
       });
     },
     removeOrgList(index) {
@@ -329,6 +339,26 @@ export default {
           this.$router.push({ path: path });
         });
       });
+    },
+    getLocation(address, index) {
+      if (!address) return;
+      this.$jsonp("https://apis.map.qq.com/ws/geocoder/v1/", {
+        key: "IWFBZ-NO66D-SZO4X-PS2WJ-L3KIT-NLF67",
+        region: "南京",
+        address: address,
+        output: "jsonp",
+      })
+        .then((res) => {
+          if(res?.status == 0) {
+            const {lng, lat} = res.result.location
+            this.$set(this.formInline.list[index], 'mapImage', `${lng},${lat}`)
+          }else {
+            this.$message.error("坐标获取失败")
+          }
+        })
+        .catch(() => {
+         this.$message.error("坐标获取失败")
+        });
     },
     formatter(row, col) {
       if (col.property == "status") {

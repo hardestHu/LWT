@@ -11,11 +11,13 @@ import App from './App'
 import store from './store'
 import router from './router'
 import api from './api'
+import {VueJsonp} from 'vue-jsonp'
 
 import '@/icons' // icon
 
 
 Vue.use(ElementUI)
+Vue.use(VueJsonp)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = api
