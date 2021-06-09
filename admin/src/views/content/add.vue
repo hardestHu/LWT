@@ -88,7 +88,7 @@ export default {
       let data = {
         id: this.id || '',
         levelOneModuleChinese: this.levelOneModuleChinese,
-        founder: this.user.token,
+        founder: this.user.name,
         ...this.form,
       };
       let res = this.id ? this.$http.contentUpdate(data) : this.$http.contentAdd(data);

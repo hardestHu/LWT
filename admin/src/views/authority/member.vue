@@ -33,7 +33,7 @@
         label="创建时间"
       >
       </el-table-column>
-      <el-table-column prop="address" label="操作">
+      <el-table-column prop="address" label="操作" v-if="user.power == 0">
         <template v-if="scope.row.power != 0" slot-scope="scope">
           <el-button type="text" size="small" @click="editUser(scope.row)"
             >修改</el-button

@@ -108,21 +108,22 @@
           ></TinymceEditor>
         </el-form-item>
         <el-form-item label="机构列表">
-          <el-form :inline="true" :model="formInline">
+          <el-form :model="formInline">
             <div
               v-for="(item, index) in formInline.list"
               class="org-item"
               :key="item.id"
             >
               <el-form-item label="机构名称">
-                <el-input
-                  v-model="item.name"
-                  placeholder="中文"
-                ></el-input>
+                <el-input v-model="item.name" placeholder="中文"></el-input>
                 <el-input v-model="item.nameEN" placeholder="EN"></el-input>
               </el-form-item>
               <el-form-item label="机构地址">
-                <el-input v-model="item.address" placeholder="中文" @blur="getLocation(item.address, index)"></el-input>
+                <el-input
+                  v-model="item.address"
+                  placeholder="中文"
+                  @blur="getLocation(item.address, index)"
+                ></el-input>
                 <el-input v-model="item.addressEN" placeholder="EN"></el-input>
                 <el-input
                   v-model="item.mapImage"
@@ -131,6 +132,18 @@
                 ></el-input>
               </el-form-item>
               <el-form-item class="add-btn">
+                <el-upload
+                  class="upload-icon"
+                  action="/laowaitong/help/uploadPictures"
+                  :limit="1"
+                  :file-list="item.fileList"
+                   list-type="picture-card"
+                  name="files"
+                  accept="image/jpg, image/jpeg, image/png"
+                  :on-success="(res,file)=>{handleIconSuccess(res,index)}"
+                >
+                  <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
                 <el-button
                   v-if="index == formInline.list.length - 1"
                   type="primary"
@@ -208,7 +221,8 @@ export default {
             nameEN: "",
             address: "",
             addressEN: "",
-            mapImage: ""
+            mapImage: "",
+            icon: ""
           },
         ],
       },
@@ -282,7 +296,23 @@ export default {
           contentChinese,
           contentEnglish,
         };
-        this.formInline.list = orgManagementList || [];
+        orgManagementList.forEach(item => {
+          if(item.icon) {
+            item.fileList = [{name: item.icon, url: item.icon}]
+          }
+        })
+        this.formInline.list = orgManagementList.length
+          ? orgManagementList
+          : [
+              {
+                name: "",
+                nameEN: "",
+                adress: "",
+                adressEN: "",
+                mapImage: "",
+                icon: "",
+              },
+            ];
         if (skipType == 4) {
           const arr = (contentChinese && contentChinese.split(",")) || [];
           arr.length ? this.contentQueryBatch(arr) : "";
@@ -297,6 +327,7 @@ export default {
         adress: "",
         adressEN: "",
         mapImage: "",
+        icon: ""
       });
     },
     removeOrgList(index) {
@@ -349,15 +380,15 @@ export default {
         output: "jsonp",
       })
         .then((res) => {
-          if(res?.status == 0) {
-            const {lng, lat} = res.result.location
-            this.$set(this.formInline.list[index], 'mapImage', `${lng},${lat}`)
-          }else {
-            this.$message.error("坐标获取失败")
+          if (res?.status == 0) {
+            const { lng, lat } = res.result.location;
+            this.$set(this.formInline.list[index], "mapImage", `${lng},${lat}`);
+          } else {
+            this.$message.error("坐标获取失败");
           }
         })
         .catch(() => {
-         this.$message.error("坐标获取失败")
+          this.$message.error("坐标获取失败");
         });
     },
     formatter(row, col) {
@@ -370,6 +401,13 @@ export default {
     handleImageSuccess(response) {
       if (response?.picIds) {
         this.form.icon = CONST.HOST + response.picIds[0];
+      }
+    },
+    handleIconSuccess(response, index) {
+      if (response?.picIds) {
+        const url = CONST.HOST + response.picIds[0]
+        this.$set(this.formInline.list[index], "icon", url);
+        this.$set(this.formInline.list[index], "fileList", [{name: url, url: url}]);
       }
     },
     editorInput(v) {
@@ -393,6 +431,11 @@ export default {
   .el-form-item {
     margin-bottom: 10px;
   }
+}
+.upload-icon{
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
 }
 .el-input {
   & + .el-input {

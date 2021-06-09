@@ -23,7 +23,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getList">查询</el-button>
-        <el-button @click="linkToAdd">添加</el-button>
+        <el-button @click="linkToAdd" v-if="user.power == '1' || user.power == '2'">添加</el-button>
       </el-form-item>
     </el-form>
     <el-table :data="info" stripe border style="width: 100%">
@@ -36,6 +36,8 @@
          <img :src="scope.row.thumbnail" alt="">
         </template>
       </el-table-column>
+      <el-table-column prop="readingVolume" label="阅读量">
+      </el-table-column>
       <el-table-column prop="status" :formatter="formatter" label="发布状态">
       </el-table-column>
       <el-table-column
@@ -44,14 +46,16 @@
         label="创建时间"
       >
       </el-table-column>
-      <el-table-column label="操作" width="180">
+      <el-table-column label="操作" width="180" v-if="user.power == '1' || user.power == '2' || user.power == '3'">
         <template slot-scope="scope">
           <el-button
             type="text"
             size="small"
+            v-if="user.power == '3'"
             @click="handleTable(scope.row, 'other')"
             >{{ scope.row.status == 0 ? "显示" : "隐藏" }}</el-button
           >
+          <template v-if="user.power == '1' || user.power == '2'">
           <el-button
             type="text"
             size="small"
@@ -70,6 +74,7 @@
             @click="handleTable(scope.row, 'del')"
             >删除</el-button
           >
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -90,6 +95,7 @@
 <script>
 import CONST from "./data";
 import { dateFormat } from "@/utils";
+import {mapState} from 'vuex'
 export default {
   data() {
     return {
@@ -104,6 +110,9 @@ export default {
       pageSizeList: CONST.PAGE_SIZE_LIST,
       stateList: CONST.PUBLISH_STATE,
     };
+  },
+  computed: {
+    ...mapState(["user"])
   },
   mounted() {
     this.getList();
@@ -127,7 +136,7 @@ export default {
     },
     async handleTable(row, type) {
       const _this = this;
-      const data = { id: row.id };
+      const data = { id: row.id, founder: this.user.name };
       switch (type) {
         case "del":
           {
