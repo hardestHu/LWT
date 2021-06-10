@@ -236,7 +236,7 @@ export default {
       total: 0,
       pageSizeList: CONST.PAGE_SIZE_LIST,
       debounce: _debounce(this.editorInput, 300),
-      debounceEN: _debounce(this.editorInput, 300),
+      debounceEN: _debounce(this.editorInputEN, 300),
     };
   },
   mounted() {
