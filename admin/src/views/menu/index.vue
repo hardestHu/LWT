@@ -126,6 +126,7 @@ export default {
       let res = await this.$http.entryQuery(data);
       if (res?.data?.list) {
         this.tableData = res.data.list;
+        this.total = res.data.total
       }
     },
     async handleTable(type, row) {

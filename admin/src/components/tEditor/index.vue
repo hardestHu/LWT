@@ -63,7 +63,7 @@
                         formData.append('files', blobInfo.blob(), blobInfo.filename());
                         //上传的api,和后端配合，返回的是图片的地址，然后加上公共的图片前缀
                         that.$http.upload(formData).then(res=>{
-                            let src = `//laowaitong.gzspiral.com/laowaitong/help/downloadFile?medicalPicId=${res.picIds[0]}`
+                            let src = `https://laowaitong.gzspiral.com/laowaitong/help/downloadFile?medicalPicId=${res.picIds[0]}`
                             success(src)
                         }).catch(res => {
                             failure('图片上传失败:' + res)

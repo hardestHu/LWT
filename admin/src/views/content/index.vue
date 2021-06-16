@@ -132,6 +132,7 @@ export default {
       };
       this.$http.contentQuery(data).then((res) => {
         this.info = res.data.list;
+        this.total = res.data.total;
       });
     },
     async handleTable(row, type) {
